@@ -1,0 +1,16 @@
+{
+  "name": "scalecubejs-example-trading",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/idanilt/scalecubejs-example-trading.git",
+  "author": "idanilt <idan@ilt.co.il>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages*"
+    ],
+    "nohoist": [
+    ]
+  }
+}
