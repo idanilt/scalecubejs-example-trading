@@ -1,17 +1,12 @@
-/*
-    balance$(balanceRequest: BalanceRequest): Observable<BalanceEvent>;
-    placeOrder(investRequest: InvestRequest): Promise<InvestResponse>;
-    cancelOrder(sellRequest: SellRequest): Promise<SellResponse>;
-    tradeActions$(tradeActionsRequest: TradeActionsRequest): Observable<TradeActionsEvent>;
- */
-
-import { Observable, Subject } from "rxjs";
+import { interval, Observable, Subject } from 'rxjs';
+import { ASYNC_MODEL_TYPES, createMicroservice } from '@scalecube/browser';
+import { filter, map, mergeMap } from 'rxjs/operators';
 
 const userStatus = new Subject();
 const userBalance = new Subject();
 
 const user = () => {
-  const name = "testUser";
+  const name = 'testUser';
 
   let balance = 1000;
   let isLogged = true;
@@ -27,7 +22,7 @@ const user = () => {
   return {
     name,
     balance,
-    isLogged
+    isLogged,
   };
 };
 
@@ -39,13 +34,12 @@ const logout = () => userStatus.next(false);
 const u = user();
 
 const balance$ = () =>
-  new Observable(obs => {
+  new Observable((obs) => {
     userBalance.subscribe((newBalance: number) => {
       if (u.isLogged) {
         obs.next(newBalance);
       }
     });
-
     userStatus.subscribe((status: boolean) => {
       if (status) {
         obs.next(u.balance);
@@ -55,6 +49,9 @@ const balance$ = () =>
 
 const cancelOrder = ({ oId }) =>
   new Promise((resolve, reject) => {
+    if (!u.isLogged) {
+      reject('user not logged');
+    }
     if (orders[oId]) {
       orders[oId] = null;
       resolve(`order ${oId} has been cancelled`);
@@ -63,10 +60,16 @@ const cancelOrder = ({ oId }) =>
     }
   });
 
-const placeOrder = order =>
+const pendingOrders$ = () =>
+  interval(10).pipe(
+    map(() => orders),
+    filter(() => u.isLogged)
+  );
+
+const placeOrder = (order) =>
   new Promise((resolve, reject) => {
     if (!u.isLogged) {
-      reject("user not logged");
+      reject('user not logged');
     }
     const { price, amount } = order;
 
@@ -86,11 +89,66 @@ const placeOrder = order =>
 
       resolve({ oId });
     } else {
-      reject("not enough money");
+      reject('not enough money');
     }
   });
 
-const tradeActions$ = new Observable(obs => {
-  // TODO random assets,
+const assets = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => ({
+  assetId: val,
+  name: `demo${val}`,
+  price: 1,
+  amount: 100,
+}));
+const tradeActions$ = () =>
+  interval(1000).pipe(
+    mergeMap(() => assets),
+    map((asset) => ({ ...asset, price: Math.floor(Math.random() * 10) + 1 }))
+  );
+
+const remoteServiceDefinition = {
+  serviceName: 'remoteService',
+  methods: {
+    balance$: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
+    },
+    login: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
+    },
+    logout: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
+    },
+    placeOrder: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
+    },
+    cancelOrder: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
+    },
+    tradeActions$: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
+    },
+    pendingOrders$: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
+    },
+  },
+};
+
+createMicroservice({
+  address: 'remoteService',
+  seedAddress: 'seed',
+  services: [
+    {
+      reference: {
+        balance$,
+        login,
+        logout,
+        placeOrder,
+        cancelOrder,
+        tradeActions$,
+        pendingOrders$,
+      },
+      definition: remoteServiceDefinition,
+    },
+  ],
 });
-export { balance$, login, logout, placeOrder, cancelOrder, tradeActions$ };
+
+export { remoteServiceDefinition };
