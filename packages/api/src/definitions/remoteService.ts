@@ -18,7 +18,7 @@ export const remoteServiceDefinition = {
     cancelOrder: {
       asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
     },
-    tradeActions$: {
+    assets$: {
       asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
     },
     pendingOrders$: {

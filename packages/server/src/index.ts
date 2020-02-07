@@ -115,7 +115,7 @@ const getAllAssets = (n) => {
 
 const assets = getAllAssets(200);
 
-export const tradeActions$ = () =>
+export const assets$ = () =>
   interval(1000).pipe(
     switchMap(() =>
       from(assets).pipe(
@@ -153,7 +153,7 @@ createMicroservice({
         logout,
         placeOrder,
         cancelOrder,
-        tradeActions$,
+        assets$,
         pendingOrders$,
       },
       definition: remoteServiceDefinition,
