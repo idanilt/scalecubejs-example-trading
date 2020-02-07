@@ -1,13 +1,13 @@
 import React from 'react';
+import { Assets } from './Assets';
 
-const Assets = () => (<div>hello</div>)
-function Tsx() {
+function App() {
   return (
-      <div>
-        <h1>Assets App</h1>
-        <Assets />
-      </div>
+    <div>
+      <h1>Assets App</h1>
+      <Assets />
+    </div>
   );
 }
 
-export default Tsx;
+export default App;
