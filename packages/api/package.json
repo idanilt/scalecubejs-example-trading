@@ -1,6 +1,17 @@
 {
   "name": "@scalecubejs-example-trading/api",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT"
+  "main": "lib",
+  "type": "lib",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@scalecube/browser": "^0.0.1",
+    "rxjs": "^6.5.4"
+  },
+  "devDependencies": {
+    "typescript": "^3.7.5"
+  }
 }

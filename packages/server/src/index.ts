@@ -1,6 +1,15 @@
-import { interval, Observable, Subject } from 'rxjs';
-import { ASYNC_MODEL_TYPES, createMicroservice } from '@scalecube/browser';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { from, interval, Observable, Subject } from 'rxjs';
+import { createMicroservice } from '@scalecube/browser';
+import { filter, map, switchMap } from 'rxjs/operators';
+import { remoteServiceDefinition } from '@scalecubejs-example-trading/api';
+
+interface AssetData {
+  id: string;
+  assetName: string;
+  price: number;
+  lastUpdate: number;
+  type: string;
+}
 
 const userStatus = new Subject();
 const userBalance = new Subject();
@@ -93,43 +102,44 @@ const placeOrder = (order) =>
     }
   });
 
-const assets = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => ({
-  assetId: val,
-  name: `demo${val}`,
-  price: 1,
-  amount: 100,
-}));
-const tradeActions$ = () =>
+const getAllAssets = (n) => {
+  const result: [] = [];
+  for (let i = 0; i < n; i++) {
+    // @ts-ignore
+    result.push(createAsset(i, 'Stock'));
+    // @ts-ignore
+    result.push(createAsset(i + n, 'Currency'));
+  }
+  return result;
+};
+
+const assets = getAllAssets(200);
+
+export const assets$ = () =>
   interval(1000).pipe(
-    mergeMap(() => assets),
-    map((asset) => ({ ...asset, price: Math.floor(Math.random() * 10) + 1 }))
+    switchMap(() =>
+      from(assets).pipe(
+        map((assets: AssetData) => {
+          const random = Math.random();
+          assets.price = random >= 0.5 ? assets.price + random : assets.price - random;
+          assets.lastUpdate = Date.now();
+          return assets;
+        })
+      )
+    )
   );
 
-const remoteServiceDefinition = {
-  serviceName: 'remoteService',
-  methods: {
-    balance$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
-    },
-    login: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
-    },
-    logout: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
-    },
-    placeOrder: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
-    },
-    cancelOrder: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
-    },
-    tradeActions$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
-    },
-    pendingOrders$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
-    },
-  },
+const createAsset = (assetId, assetType) => {
+  return {
+    id: assetId,
+    assetName:
+      assetType === 'Stock'
+        ? ['AAPL', 'GOOGL', 'FB', 'TSLA', 'MSFT'][Math.floor(Math.random() * 4)]
+        : ['EUR', 'USD', 'GBP', 'NIS', 'AUD'][Math.floor(Math.random() * 4)],
+    price: Math.random() * 10,
+    lastUpdate: Date.now(),
+    type: assetType,
+  };
 };
 
 createMicroservice({
@@ -143,7 +153,7 @@ createMicroservice({
         logout,
         placeOrder,
         cancelOrder,
-        tradeActions$,
+        assets$,
         pendingOrders$,
       },
       definition: remoteServiceDefinition,
