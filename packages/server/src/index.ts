@@ -1,7 +1,15 @@
 import { from, interval, Observable, Subject } from 'rxjs';
-import { createMicroservice } from '@scalecube/browser';
+import { ASYNC_MODEL_TYPES, createMicroservice } from '@scalecube/browser';
 import { filter, map, switchMap } from 'rxjs/operators';
-import { remoteServiceDefinition } from '@scalecubejs-example-trading/api';
+
+const remoteServiceDefinition = {
+  serviceName: 'remoteService',
+  methods: {
+    assets$: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
+    },
+  },
+};
 
 interface AssetData {
   id: string;

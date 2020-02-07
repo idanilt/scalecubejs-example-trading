@@ -1,8 +1,7 @@
 {
   "name": "@scalecubejs-example-trading/api",
   "version": "1.0.0",
-  "main": "lib",
-  "type": "lib",
+  "main": "src",
   "license": "MIT",
   "scripts": {
     "build": "tsc"

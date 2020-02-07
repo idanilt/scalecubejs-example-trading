@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@scalecube/browser": "^0.0.1",
+    "@scalecubejs-example-trading/api": "1.0.0",
+    "@scalecubejs-example-trading/server": "1.0.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "core-js": "^3.6.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-intersection-observer": "^8.25.2",
