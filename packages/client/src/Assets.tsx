@@ -1,5 +1,5 @@
 import { Asset } from './Asset';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { createMicroservice, ASYNC_MODEL_TYPES } from '@scalecube/browser';
 
@@ -18,171 +18,27 @@ export const remoteService = microservice.createProxy({
   serviceDefinition: remoteServiceDefinition,
 });
 
+const used: any = {};
+const cache: any = [];
 export const Assets = () => {
-  useEffect(() => {});
-  const assets = [
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-    {
-      id: '1',
-      name: 'appl',
-      price: 1.677,
-      lastUpdate: '1/2/3 00:00:23',
-      type: 'currency',
-    },
-  ];
+  const [assets, setAsset] = useState<any>([]);
+
+  useEffect(() => {
+    const sub = remoteService.assets$().subscribe((i: any) => {
+      if (used[i.id] === undefined) {
+        used[i.id] = true;
+        cache.push(i);
+        //console.log(i)
+      }
+    });
+    setTimeout(() => {
+      setAsset(cache);
+      sub.unsubscribe();
+    }, 1100);
+    return () => {
+      sub.unsubscribe();
+    };
+  });
 
   return (
     <table className="table table-bordered">
@@ -194,7 +50,7 @@ export const Assets = () => {
           <th>Last Update</th>
           <th>Type</th>
         </tr>
-        {assets.map((i) => (
+        {assets.map((i: any) => (
           <Asset key={i.id} price={i.price} id={i.id} type={i.type} lastUpdate={i.lastUpdate} />
         ))}
       </tbody>

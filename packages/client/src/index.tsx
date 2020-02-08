@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import '@scalecubejs-example-trading/server';
+import './services';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
