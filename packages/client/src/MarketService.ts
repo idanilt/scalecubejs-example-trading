@@ -1,6 +1,6 @@
 import { createMicroservice, ASYNC_MODEL_TYPES } from '@scalecube/browser';
 import { remoteServiceDefinition } from './services';
-import { from, interval } from 'rxjs';
+import { from, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export const MarketServiceDefinition = {
@@ -39,7 +39,7 @@ createMicroservice({
             );
           },
           asset$: (id: string) =>
-            interval(1000).pipe(
+            timer(0, 1000).pipe(
               map(() => {
                 return assets[id];
               })
