@@ -3,28 +3,19 @@ import { useInView } from 'react-intersection-observer';
 import { marketService } from './marketServiceProxy';
 
 const AssetFeed = (props: any) => {
-  // const [state, setState] = useState<any>({ price: '', lastUpdate: '' });
-  // const price = 1;
-  // const lastUpdate = 0;
-  //
-  // useEffect(() => {
-  //   const sub = marketService
-  //     .asset$(props.assetId)
-  //     .subscribe(({ price, lastUpdate }: any) => {
-  //       // console.log('AssetFeed', { price, lastUpdate })
-  //       setState({ price, lastUpdate })
-  //     });
-  //
-  //   return () => {
-  //     console.log('AssetFeed unsubscribe', props.assetId)
-  //     sub.unsubscribe();
-  //   };
-  // }, [props.assetId]);
+  const [state, setState] = useState<any>({ price: '', lastUpdate: '' });
+  useEffect(() => {
+    const sub = marketService.asset$(props.id).subscribe(setState);
+
+    return () => {
+      sub.unsubscribe();
+    };
+  }, [props.assetId]);
 
   return (
     <>
-      <td>{props.price}</td>
-      <td>{props.lastUpdate}</td>
+      <td>{state.price}</td>
+      <td>{state.lastUpdate}</td>
     </>
   );
 };
