@@ -18,6 +18,7 @@ interface AssetData {
   lastUpdate: number;
   type: string;
 }
+
 /*
 const userStatus = new Subject();
 const userBalance = new Subject();
@@ -134,9 +135,9 @@ const getAllAssets = (n: number) => {
   return result;
 };
 
-const assets = getAllAssets(1);
+const assets = getAllAssets(200);
 
-export const assets$ = () =>
+const assets$ = () =>
   interval(1000).pipe(
     switchMap(() =>
       from(assets).pipe(
@@ -152,7 +153,6 @@ export const assets$ = () =>
 
 createMicroservice({
   address: 'seed',
-  seedAddress: 'seed2',
   services: [
     {
       reference: {

@@ -1,16 +1,14 @@
 import { Asset } from './Asset';
 import React, { useEffect, useState } from 'react';
-import { toArray, take } from 'rxjs/operators';
 import { marketService } from './marketServiceProxy';
 
 export const Assets = () => {
   const [assets, setAsset] = useState<any>([]);
 
   useEffect(() => {
-    const sub = marketService
-      .assets$()
-      .pipe(take(200), toArray())
-      .subscribe((i: any) => setAsset(i));
+    const sub = marketService.assets$().subscribe((i: any) => {
+      setAsset(i);
+    });
     return () => {
       sub.unsubscribe();
     };

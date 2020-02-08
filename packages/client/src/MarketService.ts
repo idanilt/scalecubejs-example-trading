@@ -1,7 +1,8 @@
 import { createMicroservice, ASYNC_MODEL_TYPES } from '@scalecube/browser';
 import { remoteServiceDefinition } from './services';
-import { from, interval } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { from, interval, Observable } from 'rxjs';
+import { map, switchMap, take, toArray } from 'rxjs/operators';
+import { filter } from 'minimatch';
 
 export const MarketServiceDefinition = {
   serviceName: 'MarketService',
@@ -22,28 +23,32 @@ createMicroservice({
     {
       definition: MarketServiceDefinition,
       reference: ({ createProxy }) => {
-        const assets: any = {};
         const remoteService = createProxy({ serviceDefinition: remoteServiceDefinition });
-        remoteService.assets$().subscribe((i: any) => {
-          assets[i.id] = i;
-        });
+        const assets$ = remoteService.assets$().pipe(
+          take(200),
+          toArray(),
+          // @ts-ignore
+          map((assets) =>
+            assets.reduce((acc: any[], asset: any) => {
+              acc[asset.id] = asset;
+              return acc;
+            }, [])
+          )
+        );
 
         return {
           assets$: () => {
-            return from(
-              Object.keys(assets).map((k) => ({
-                id: assets[k].id,
-                name: assets[k].name,
-                type: assets[k].type,
-              }))
-            );
+            return assets$;
           },
-          asset$: (id: string) =>
-            interval(1000).pipe(
-              map(() => {
-                return assets[id];
-              })
-            ),
+          asset$: (id: string) => {
+            return new Observable((obs) => {
+              assets$.subscribe({
+                next: (assets: any) => obs.next(assets[id]),
+                error: (err: any) => obs.error(err),
+                complete: () => obs.complete(),
+              });
+            });
+          },
         };
       },
     },
