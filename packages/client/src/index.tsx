@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import './services';
+import './MarketService';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

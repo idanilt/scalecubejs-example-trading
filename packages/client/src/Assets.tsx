@@ -1,40 +1,16 @@
 import { Asset } from './Asset';
 import React, { useEffect, useState } from 'react';
+import { toArray, take } from 'rxjs/operators';
+import { marketService } from './marketServiceProxy';
 
-import { createMicroservice, ASYNC_MODEL_TYPES } from '@scalecube/browser';
-
-export const remoteServiceDefinition = {
-  serviceName: 'remoteService',
-  methods: {
-    assets$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
-    },
-  },
-};
-
-const microservice = createMicroservice({ seedAddress: 'seed' });
-
-export const remoteService = microservice.createProxy({
-  serviceDefinition: remoteServiceDefinition,
-});
-
-const used: any = {};
-const cache: any = [];
 export const Assets = () => {
   const [assets, setAsset] = useState<any>([]);
 
   useEffect(() => {
-    const sub = remoteService.assets$().subscribe((i: any) => {
-      if (used[i.id] === undefined) {
-        used[i.id] = true;
-        cache.push(i);
-        //console.log(i)
-      }
-    });
-    setTimeout(() => {
-      setAsset(cache);
-      sub.unsubscribe();
-    }, 1100);
+    const sub = marketService
+      .assets$()
+      .pipe(take(200), toArray())
+      .subscribe((i: any) => setAsset(i));
     return () => {
       sub.unsubscribe();
     };

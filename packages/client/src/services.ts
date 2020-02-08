@@ -134,7 +134,7 @@ const getAllAssets = (n: number) => {
   return result;
 };
 
-const assets = getAllAssets(200);
+const assets = getAllAssets(1);
 
 export const assets$ = () =>
   interval(1000).pipe(
