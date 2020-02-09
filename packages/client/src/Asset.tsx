@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { marketService } from './marketServiceProxy';
+import { TableRow } from '@material-ui/core';
+import TableCell from '@material-ui/core/TableCell';
 
 const AssetFeed = (props: any) => {
   const [state, setState] = useState<any>({ price: '', lastUpdate: '' });
@@ -14,8 +16,8 @@ const AssetFeed = (props: any) => {
 
   return (
     <>
-      <td>{state.price}</td>
-      <td>{state.lastUpdate}</td>
+      <TableCell>{state.price}</TableCell>
+      <TableCell>{state.lastUpdate}</TableCell>
     </>
   );
 };
@@ -27,18 +29,18 @@ export const Asset = (props: any) => {
   });
 
   return (
-    <tr key={id} ref={ref}>
-      <td>{id}</td>
-      <td>{name}</td>
+    <TableRow key={id} ref={ref}>
+      <TableCell>{id}</TableCell>
+      <TableCell>{name}</TableCell>
       {inView ? (
         <AssetFeed {...props} />
       ) : (
         <>
-          <td></td>
-          <td></td>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
         </>
       )}
-      <td>{type}</td>
-    </tr>
+      <TableCell>{type}</TableCell>
+    </TableRow>
   );
 };
