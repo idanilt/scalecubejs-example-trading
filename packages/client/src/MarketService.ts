@@ -14,7 +14,6 @@ export const MarketServiceDefinition = {
     },
   },
 };
-debugger;
 createMicroservice({
   seedAddress: 'seed',
   address: 'marketService',
@@ -42,7 +41,6 @@ createMicroservice({
 
         return {
           assets$: () => {
-            debugger;
             return ready
               .pipe(
                 switchMap(() =>

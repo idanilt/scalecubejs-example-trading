@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
-  const [isLogin, setIsLogin] = useState(false);
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -30,12 +29,9 @@ function App() {
           <Typography variant="h6" className={classes.title}>
             Market
           </Typography>
-          <Button color="inherit" className={classes.btn} onClick={() => setIsLogin(!isLogin)}>
-            {!isLogin ? 'Login' : 'Logout'}
-          </Button>
         </Toolbar>
       </AppBar>
-      {isLogin ? <Assets /> : null}
+      <Assets />
     </div>
   );
 }
