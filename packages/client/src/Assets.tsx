@@ -3,24 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { marketService } from './marketServiceProxy';
 import { take, toArray } from 'rxjs/operators';
 
-let waitForAssets = 1;
 export const Assets = () => {
   const [assets, setAsset] = useState<any>([]);
 
   useEffect(() => {
-    const sub = marketService
-      .assets$()
-      .pipe(take(200), toArray(), take(1))
-      .subscribe((i: any) => {
-        if (i.length === 0) {
-          waitForAssets++;
-        }
-        setAsset(i);
-      });
-    return () => {
-      sub.unsubscribe();
-    };
-  }, [waitForAssets]);
+    marketService.assets$().then((assets: any) => setAsset(assets));
+  }, []);
 
   return (
     <table className="table table-bordered">

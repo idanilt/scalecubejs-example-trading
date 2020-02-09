@@ -4,7 +4,7 @@ export const MarketServiceDefinition = {
   serviceName: 'MarketService',
   methods: {
     assets$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
     },
     asset$: {
       asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,

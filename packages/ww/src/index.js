@@ -1,8 +1,15 @@
 import { createMicroservice, ASYNC_MODEL_TYPES } from '@scalecube/browser';
-import { remoteServiceDefinition } from './services';
 import { of, timer, Subject, ReplaySubject } from 'rxjs';
 import { map, filter, tap, switchMap, take, delay, toArray } from 'rxjs/operators';
 
+const remoteServiceDefinition = {
+  serviceName: 'remoteService',
+  methods: {
+    assets$: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
+    },
+  },
+};
 export const MarketServiceDefinition = {
   serviceName: 'MarketService',
   methods: {
@@ -14,7 +21,7 @@ export const MarketServiceDefinition = {
     },
   },
 };
-debugger;
+
 createMicroservice({
   seedAddress: 'seed',
   address: 'marketService',
@@ -23,9 +30,9 @@ createMicroservice({
     {
       definition: MarketServiceDefinition,
       reference: ({ createProxy }) => {
-        const assets: any = {};
+        const assets = {};
         const remoteService = createProxy({ serviceDefinition: remoteServiceDefinition });
-        remoteService.assets$().subscribe((i: any) => {
+        remoteService.assets$().subscribe((i) => {
           assets[i.id] = i;
         });
 
@@ -42,7 +49,6 @@ createMicroservice({
 
         return {
           assets$: () => {
-            debugger;
             return ready
               .pipe(
                 switchMap(() =>
@@ -58,14 +64,14 @@ createMicroservice({
               )
               .toPromise();
           },
-          asset$: (id: string) => {
-            let lastTick: string;
+          asset$: (id) => {
+            let lastTick;
             return ticks.pipe(
               map(() => {
                 return assets[id];
               }),
-              filter((i: any) => i.lastUpdate != lastTick),
-              tap((i: any) => (lastTick = i.lastUpdate))
+              filter((i) => i.lastUpdate != lastTick),
+              tap((i) => (lastTick = i.lastUpdate))
             );
           },
         };
