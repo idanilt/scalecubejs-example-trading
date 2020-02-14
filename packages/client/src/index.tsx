@@ -1,12 +1,12 @@
+import './services';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { workers } from '@scalecube/browser';
-import './services';
 
 //import './MarketService';
-//import('http://localhost:1234/index.js');
+
+import { workers } from '@scalecube/browser';
 async function init() {
   workers.initialize();
   let blob = await fetch('http://localhost:1234/index.js').then((r) => r.blob());
@@ -21,3 +21,4 @@ ReactDOM.render(<App />, document.getElementById('root'));
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.unregister();
+//import('http://localhost:1234/index.js');

@@ -13,7 +13,7 @@ const remoteServiceDefinition = {
 
 interface AssetData {
   id: string;
-  assetName: string;
+  name: string;
   price: number;
   lastUpdate: number;
   type: string;
@@ -114,7 +114,7 @@ const placeOrder = (order) =>
 const createAsset = (assetId: number, assetType: string) => {
   return {
     id: assetId,
-    assetName:
+    name:
       assetType === 'Stock'
         ? ['AAPL', 'GOOGL', 'FB', 'TSLA', 'MSFT'][Math.floor(Math.random() * 4)]
         : ['EUR', 'USD', 'GBP', 'NIS', 'AUD'][Math.floor(Math.random() * 4)],

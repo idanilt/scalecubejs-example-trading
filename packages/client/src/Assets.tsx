@@ -29,15 +29,15 @@ export const Assets = () => {
         <TableHead>
           <TableRow>
             <TableCell>Id</TableCell>
-            <TableCell align="right">Name</TableCell>
-            <TableCell align="right">Price</TableCell>
-            <TableCell align="right">Last</TableCell>
-            <TableCell align="right">Type</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Price</TableCell>
+            <TableCell>Last</TableCell>
+            <TableCell>Type</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {assets.map((i: any) => (
-            <Asset key={i.id} price={i.price} id={i.id} type={i.type} lastUpdate={i.lastUpdate} />
+            <Asset key={i.id} price={i.price} id={i.id} name={i.name} type={i.type} lastUpdate={i.lastUpdate} />
           ))}
         </TableBody>
       </Table>
