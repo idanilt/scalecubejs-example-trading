@@ -5,14 +5,24 @@ import * as serviceWorker from './serviceWorker';
 import { workers } from '@scalecube/browser';
 import './services';
 
-//import './MarketService';
+import './MarketService';
+// import './chartService';
+
 //import('http://localhost:1234/index.js');
 async function init() {
+  // @ts-ignore
   workers.initialize();
-  let blob = await fetch('http://localhost:1234/index.js').then((r) => r.blob());
-  const worker = new Worker(URL.createObjectURL(blob));
-  workers.addWorker(worker);
+  // let blob = await fetch('http://localhost:1234/index.js').then((r) => r.blob());
+  // const worker = new Worker(URL.createObjectURL(blob));
+  // @ts-ignore
+  // workers.addWorker(worker);
+
+  const iframe = document.getElementById('charts');
+
+  // @ts-ignore
+  workers.addIframe(iframe);
 }
+
 init();
 
 ReactDOM.render(<App />, document.getElementById('root'));
