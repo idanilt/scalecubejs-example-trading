@@ -1,6 +1,6 @@
 import { createMicroservice, ASYNC_MODEL_TYPES } from '@scalecube/browser';
 import { of, timer, Subject, ReplaySubject } from 'rxjs';
-import { map, filter, tap, switchMap, take, delay, toArray } from 'rxjs/operators';
+import { map, filter, tap, switchMap, take, delay, toArray, repeat } from 'rxjs/operators';
 
 const remoteServiceDefinition = {
   serviceName: 'remoteService',
@@ -79,3 +79,62 @@ createMicroservice({
     },
   ],
 });
+
+const chartServiceDefinition = {
+  serviceName: 'chartService',
+  methods: {
+    history$: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
+    },
+  },
+};
+//
+// createMicroservice({
+//   // debug: true,
+//   seedAddress: 'seed',
+//   address: 'chartService',
+//   services: [
+//     {
+//       definition: chartServiceDefinition,
+//       reference: ({ createProxy }) => {
+//         const remoteService = createProxy({ serviceDefinition: remoteServiceDefinition });
+//
+//         const subject = new ReplaySubject(1);
+//         const data = [['time [second]']];
+//         let count = 0;
+//         remoteService
+//           .assets$()
+//           .pipe(take(200), toArray(), repeat())
+//           .subscribe((assets) => {
+//             assets = assets.slice(1, 5);
+//             if (count === 0) {
+//               assets.forEach((asset) => {
+//                 data[0].push(asset.id + '');
+//               });
+//             }
+//
+//             count++;
+//             const prices = assets.reduce(
+//               (arr, asset) => {
+//                 arr.push(asset.price);
+//                 return arr;
+//               },
+//               [count]
+//             );
+//             data.push(prices);
+//
+//             // console.log('history$', data);
+//
+//             subject.next(data);
+//           });
+//
+//         subject.subscribe();
+//         return {
+//           history$: () => {
+//             return subject.asObservable();
+//           },
+//         };
+//       },
+//     },
+//   ],
+// });

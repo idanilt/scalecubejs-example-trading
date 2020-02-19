@@ -15,7 +15,7 @@ const chartServiceDefinition = {
 createMicroservice({
   // debug: true,
   seedAddress: 'seed',
-  address: 'chart',
+  address: 'chartService',
   services: [
     {
       definition: chartServiceDefinition,

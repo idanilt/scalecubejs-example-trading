@@ -118,7 +118,7 @@ const createAsset = (assetId: number, assetType: string) => {
       assetType === 'Stock'
         ? ['AAPL', 'GOOGL', 'FB', 'TSLA', 'MSFT'][Math.floor(Math.random() * 4)]
         : ['EUR', 'USD', 'GBP', 'NIS', 'AUD'][Math.floor(Math.random() * 4)],
-    price: Math.random() * 10,
+    price: Math.floor(Math.random() * 10),
     lastUpdate: Date.now(),
     type: assetType,
   };
@@ -143,7 +143,8 @@ const assets$ = () =>
       from(assets).pipe(
         map((assets: AssetData) => {
           const random = Math.random();
-          assets.price = random >= 0.5 ? assets.price + random : assets.price - random;
+          assets.price = Number(random.toFixed(1)) > 0.6 ? assets.price + random : assets.price - random;
+          // console.log('assets.price', random)
           assets.lastUpdate = Date.now();
           return assets;
         })

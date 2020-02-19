@@ -23,7 +23,7 @@ const chartServiceDefinition = {
 createMicroservice({
   // debug: true,
   seedAddress: 'seed',
-  address: 'chart',
+  address: 'chartService',
   services: [
     {
       definition: chartServiceDefinition,
@@ -31,13 +31,13 @@ createMicroservice({
         const remoteService = createProxy({ serviceDefinition: remoteServiceDefinition });
 
         const subject = new ReplaySubject(1);
-        const data: any[] = [['x']];
+        const data: any[] = [['time [second]']];
         let count = 0;
         remoteService
           .assets$()
           .pipe(take(200), toArray(), repeat())
           .subscribe((assets: any[]) => {
-            // assets = assets.slice(1, 4);
+            assets = assets.slice(1, 5);
             if (count === 0) {
               assets.forEach((asset) => {
                 data[0].push(asset.id + '');
