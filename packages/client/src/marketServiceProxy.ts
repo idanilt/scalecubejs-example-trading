@@ -12,7 +12,7 @@ export const MarketServiceDefinition = {
   },
 };
 
-const microservice = createMicroservice({ seedAddress: 'seed', debug: true, address: 'asset' });
+const microservice = createMicroservice({ seedAddress: 'seed', debug: false, address: 'asset' });
 
 export const marketService = microservice.createProxy({
   serviceDefinition: MarketServiceDefinition,

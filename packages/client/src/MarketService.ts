@@ -17,7 +17,7 @@ export const MarketServiceDefinition = {
 createMicroservice({
   seedAddress: 'seed',
   address: 'marketService',
-  debug: true,
+  // debug: true,
   services: [
     {
       definition: MarketServiceDefinition,

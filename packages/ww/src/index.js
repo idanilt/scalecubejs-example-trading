@@ -1,5 +1,5 @@
 import { createMicroservice, ASYNC_MODEL_TYPES } from '@scalecube/browser';
-import { of, timer, Subject, ReplaySubject } from 'rxjs';
+import { of, timer, Subject, ReplaySubject, Observable } from 'rxjs';
 import { map, filter, tap, switchMap, take, delay, toArray, repeat } from 'rxjs/operators';
 
 const remoteServiceDefinition = {
@@ -25,7 +25,7 @@ export const MarketServiceDefinition = {
 createMicroservice({
   seedAddress: 'seed',
   address: 'marketService',
-  debug: true,
+  // debug: true,
   services: [
     {
       definition: MarketServiceDefinition,
@@ -88,53 +88,52 @@ const chartServiceDefinition = {
     },
   },
 };
-//
-// createMicroservice({
-//   // debug: true,
-//   seedAddress: 'seed',
-//   address: 'chartService',
-//   services: [
-//     {
-//       definition: chartServiceDefinition,
-//       reference: ({ createProxy }) => {
-//         const remoteService = createProxy({ serviceDefinition: remoteServiceDefinition });
-//
-//         const subject = new ReplaySubject(1);
-//         const data = [['time [second]']];
-//         let count = 0;
-//         remoteService
-//           .assets$()
-//           .pipe(take(200), toArray(), repeat())
-//           .subscribe((assets) => {
-//             assets = assets.slice(1, 5);
-//             if (count === 0) {
-//               assets.forEach((asset) => {
-//                 data[0].push(asset.id + '');
-//               });
-//             }
-//
-//             count++;
-//             const prices = assets.reduce(
-//               (arr, asset) => {
-//                 arr.push(asset.price);
-//                 return arr;
-//               },
-//               [count]
-//             );
-//             data.push(prices);
-//
-//             // console.log('history$', data);
-//
-//             subject.next(data);
-//           });
-//
-//         subject.subscribe();
-//         return {
-//           history$: () => {
-//             return subject.asObservable();
-//           },
-//         };
-//       },
-//     },
-//   ],
-// });
+
+createMicroservice({
+  // debug: true,
+  seedAddress: 'seed',
+  address: 'chartService',
+  services: [
+    {
+      definition: chartServiceDefinition,
+      reference: ({ createProxy }) => {
+        const remoteService = createProxy({ serviceDefinition: remoteServiceDefinition });
+
+        const subject = new ReplaySubject(1);
+        const data = [['time [second]']];
+        let count = 0;
+        remoteService
+          .assets$()
+          .pipe(take(200), toArray(), repeat())
+          .subscribe((assets) => {
+            if (count === 0) {
+              assets.forEach((asset) => {
+                data[0].push(asset.id + '');
+              });
+            }
+
+            count++;
+            const prices = assets.reduce(
+              (arr, asset) => {
+                arr.push(asset.price);
+                return arr;
+              },
+              [count]
+            );
+            data.push(prices);
+
+            subject.next(data);
+          });
+
+        return {
+          history$: () =>
+            new Observable((obs) => {
+              subject.subscribe((data) => {
+                obs.next(data);
+              });
+            }),
+        };
+      },
+    },
+  ],
+});

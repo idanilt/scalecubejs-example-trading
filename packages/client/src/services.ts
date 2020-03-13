@@ -142,8 +142,9 @@ const assets$ = () =>
     switchMap(() =>
       from(assets).pipe(
         map((assets: AssetData) => {
-          const random = Math.random();
-          assets.price = Number(random.toFixed(1)) > 0.6 ? assets.price + random : assets.price - random;
+          const randomPrefix = Math.random();
+          const randomPrice = Math.random();
+          assets.price = randomPrefix > 0.5 ? assets.price + randomPrice : assets.price - randomPrice;
           // console.log('assets.price', random)
           assets.lastUpdate = Date.now();
           return assets;
@@ -154,6 +155,7 @@ const assets$ = () =>
 
 createMicroservice({
   address: 'seed',
+  debug: true,
   services: [
     {
       reference: {

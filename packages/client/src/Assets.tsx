@@ -7,25 +7,34 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Asset } from './Asset';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { marketService } from './marketServiceProxy';
 
 const useStyles = makeStyles({
-  table: {},
+  table: {
+    height: `${window.innerHeight - 50}px`,
+    width: '100%',
+  },
 });
 
-let waitForAssets = 1;
 export const Assets = () => {
   const [assets, setAsset] = useState<any>([]);
 
+  const latestProps = useRef(assets);
   useEffect(() => {
-    marketService.assets$().then((assets: any) => setAsset(assets));
+    latestProps.current = assets;
+  });
+
+  useEffect(() => {
+    const subscription = marketService.assets$().then((assets: any) => setAsset(assets));
+
+    return subscription.unsubscribe;
   }, []);
 
   const classes = useStyles();
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
+    <TableContainer className={classes.table} component={Paper}>
+      <Table aria-label="simple table">
         <TableHead>
           <TableRow>
             <TableCell>Id</TableCell>
