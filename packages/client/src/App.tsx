@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
   btn: {
     width: '100px',
   },
+  chart: {
+    marginBottom: '10px',
+  },
 }));
 
 function App() {
@@ -31,6 +34,7 @@ function App() {
           </Typography>
         </Toolbar>
       </AppBar>
+      <iframe id="charts" width="100%" height="300px" className={classes.chart}></iframe>
       <Assets />
     </div>
   );

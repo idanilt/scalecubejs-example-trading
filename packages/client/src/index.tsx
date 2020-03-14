@@ -12,14 +12,6 @@ async function init() {
   const worker = new Worker(URL.createObjectURL(blob));
   // @ts-ignore
   workers.addWorker(worker);
-
-  const iframe = document.getElementById('charts');
-  if (iframe) {
-    // @ts-ignore
-    iframe.src = 'http://localhost:1111/index.html';
-    // @ts-ignore
-    workers.addIframe(iframe);
-  }
 }
 
 init();

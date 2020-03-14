@@ -2,7 +2,6 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import { Chart } from 'react-google-charts';
 
-// import './chartService';
 import { createMicroservice, ASYNC_MODEL_TYPES } from '@scalecube/browser';
 import { useRef, useState } from 'react';
 import { useEffect } from 'react';
@@ -55,10 +54,11 @@ const App = () => {
     return subscription.unsubscribe;
   }, []);
 
-  return (
+  // console.log(data)
+  return data.length <= 3 ? null : (
     <Chart
       width={'100%'}
-      height={'380px'}
+      height={'280px'}
       chartType="Line"
       loader={<div>Loading Chart</div>}
       data={data}

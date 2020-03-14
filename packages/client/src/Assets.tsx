@@ -10,12 +10,24 @@ import { Asset } from './Asset';
 import React, { useEffect, useRef, useState } from 'react';
 import { marketService } from './marketServiceProxy';
 
+import { workers } from '@scalecube/browser';
+
 const useStyles = makeStyles({
   table: {
-    height: `400px`,
+    maxHeight: '400px',
     width: '100%',
   },
 });
+
+const addIframe = () => {
+  const iframe = document.getElementById('charts');
+  if (iframe) {
+    // @ts-ignore
+    iframe.src = 'http://localhost:1111/index.html';
+    // @ts-ignore
+    workers.addIframe(iframe);
+  }
+};
 
 export const Assets = () => {
   const [assets, setAsset] = useState<any>([]);
@@ -27,14 +39,14 @@ export const Assets = () => {
 
   useEffect(() => {
     const subscription = marketService.assets$().then((assets: any) => setAsset(assets));
-
+    addIframe();
     return subscription.unsubscribe;
   }, []);
 
   const classes = useStyles();
   return (
     <TableContainer className={classes.table} component={Paper}>
-      <Table aria-label="simple table">
+      <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
             <TableCell>Id</TableCell>
