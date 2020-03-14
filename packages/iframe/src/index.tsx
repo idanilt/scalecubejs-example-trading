@@ -58,7 +58,7 @@ const App = () => {
   return (
     <Chart
       width={'100%'}
-      height={'400px'}
+      height={'380px'}
       chartType="Line"
       loader={<div>Loading Chart</div>}
       data={data}
@@ -68,7 +68,6 @@ const App = () => {
           subtitle: '',
         },
       }}
-      rootProps={{ 'data-testid': '3' }}
     />
   );
 };

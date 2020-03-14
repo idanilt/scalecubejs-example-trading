@@ -13,11 +13,14 @@
     "typescript": "^3.7.5"
   },
   "scripts": {
-    "build": "parcel build src/index.js",
+    "build": "parcel build src/index.js --no-minify",
     "start": "http-server -a localhost -p 1122"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
     "rxjs": "^6.5.4"
-  }
+  },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ]
 }

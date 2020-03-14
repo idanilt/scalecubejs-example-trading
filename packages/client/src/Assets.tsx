@@ -12,7 +12,7 @@ import { marketService } from './marketServiceProxy';
 
 const useStyles = makeStyles({
   table: {
-    height: `${window.innerHeight - 50}px`,
+    height: `400px`,
     width: '100%',
   },
 });

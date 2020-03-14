@@ -18,10 +18,6 @@ async function init() {
     // @ts-ignore
     iframe.src = 'http://localhost:1111/index.html';
     // @ts-ignore
-    iframe.height = window.innerHeight - 50;
-    // @ts-ignore
-    iframe.width = 400;
-    // @ts-ignore
     workers.addIframe(iframe);
   }
 }

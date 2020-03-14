@@ -14,7 +14,7 @@
     "react-intersection-observer": "^8.26.1"
   },
   "scripts": {
-    "build": "parcel build src/index.tsx --no-minify",
+    "build": "parcel build src/index.tsx",
     "start": "parcel public/index.html"
   },
   "eslintConfig": {

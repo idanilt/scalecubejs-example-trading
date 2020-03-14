@@ -28,6 +28,7 @@ export const Asset = (props: any) => {
     threshold: 0,
   });
 
+  marketService.setAssetsInView({ id, inView });
   return (
     <TableRow key={id} ref={ref}>
       <TableCell>{id}</TableCell>

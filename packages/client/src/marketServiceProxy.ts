@@ -9,6 +9,12 @@ export const MarketServiceDefinition = {
     asset$: {
       asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
     },
+    setAssetsInView: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
+    },
+    getAssetsInView: {
+      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
+    },
   },
 };
 
