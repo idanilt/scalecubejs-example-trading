@@ -19,4 +19,8 @@ cd packages/ww
 
 - build: `parcel build src/index.js`
 
+cd packages/server
+
+- build: `parcel build src/index.js`
+
 run from root: `http-server -a localhost -p 2001`
