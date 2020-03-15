@@ -1,24 +1,17 @@
 import { from, interval, Observable, Subject } from 'rxjs';
 import { ASYNC_MODEL_TYPES, createMicroservice } from '@scalecube/browser';
 import { filter, map, switchMap } from 'rxjs/operators';
-
-const remoteServiceDefinition = {
-  serviceName: 'remoteService',
-  methods: {
-    assets$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
-    },
-  },
-};
+import { remoteServiceDefinition } from '@scalecubejs-example-trading/api';
 
 interface AssetData {
   id: string;
-  assetName: string;
+  name: string;
   price: number;
   lastUpdate: number;
   type: string;
 }
 
+/*
 const userStatus = new Subject();
 const userBalance = new Subject();
 
@@ -109,8 +102,21 @@ const placeOrder = (order) =>
       reject('not enough money');
     }
   });
+*/
+const createAsset = (assetId: number, assetType: string) => {
+  return {
+    id: assetId,
+    name:
+      assetType === 'Stock'
+        ? ['AAPL', 'GOOGL', 'FB', 'TSLA', 'MSFT'][Math.floor(Math.random() * 4)]
+        : ['EUR', 'USD', 'GBP', 'NIS', 'AUD'][Math.floor(Math.random() * 4)],
+    price: Math.floor(Math.random() * 10),
+    lastUpdate: Date.now(),
+    type: assetType,
+  };
+};
 
-const getAllAssets = (n) => {
+const getAllAssets = (n: number) => {
   const result: [] = [];
   for (let i = 0; i < n; i++) {
     // @ts-ignore
@@ -123,13 +129,15 @@ const getAllAssets = (n) => {
 
 const assets = getAllAssets(200);
 
-export const assets$ = () =>
+const assets$ = () =>
   interval(1000).pipe(
     switchMap(() =>
       from(assets).pipe(
         map((assets: AssetData) => {
-          const random = Math.random();
-          assets.price = random >= 0.5 ? assets.price + random : assets.price - random;
+          const randomPrefix = Math.random();
+          const randomPrice = Math.random();
+          assets.price = randomPrefix > 0.5 ? assets.price + randomPrice : assets.price - randomPrice;
+          // console.log('assets.price', random)
           assets.lastUpdate = Date.now();
           return assets;
         })
@@ -137,32 +145,19 @@ export const assets$ = () =>
     )
   );
 
-const createAsset = (assetId, assetType) => {
-  return {
-    id: assetId,
-    assetName:
-      assetType === 'Stock'
-        ? ['AAPL', 'GOOGL', 'FB', 'TSLA', 'MSFT'][Math.floor(Math.random() * 4)]
-        : ['EUR', 'USD', 'GBP', 'NIS', 'AUD'][Math.floor(Math.random() * 4)],
-    price: Math.random() * 10,
-    lastUpdate: Date.now(),
-    type: assetType,
-  };
-};
-
 createMicroservice({
-  address: 'remoteService',
   seedAddress: 'seed',
+  address: 'server',
   services: [
     {
       reference: {
-        balance$,
-        login,
-        logout,
-        placeOrder,
-        cancelOrder,
+        // balance$,
+        // login,
+        // logout,
+        // placeOrder,
+        // cancelOrder,
         assets$,
-        pendingOrders$,
+        // pendingOrders$,
       },
       definition: remoteServiceDefinition,
     },

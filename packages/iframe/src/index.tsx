@@ -1,40 +1,14 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { Chart } from 'react-google-charts';
-
-import { createMicroservice, ASYNC_MODEL_TYPES } from '@scalecube/browser';
+import { chartServiceDefinition } from '@scalecubejs-example-trading/api';
+import { createMicroservice } from '@scalecube/browser';
 import { useRef, useState } from 'react';
 import { useEffect } from 'react';
 
-const chartServiceDefinition = {
-  serviceName: 'chartService',
-  methods: {
-    history$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
-    },
-  },
-};
-
-debugger;
 const chartService = createMicroservice({
   seedAddress: 'seed',
-  address: 'iframeProxy',
-  services: [
-    {
-      definition: {
-        serviceName: 'iframeService',
-        methods: {
-          test: {
-            asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
-          },
-        },
-      },
-      reference: {
-        test: () => Promise.resolve({}),
-      },
-    },
-  ],
-  debug: true,
+  address: 'iframeChart',
 }).createProxy({ serviceDefinition: chartServiceDefinition });
 
 const App = () => {

@@ -1,32 +1,11 @@
 import { createMicroservice, ASYNC_MODEL_TYPES } from '@scalecube/browser';
 import { of, timer, Subject, ReplaySubject, Observable, interval } from 'rxjs';
 import { map, filter, tap, switchMap, take, delay, toArray, repeat } from 'rxjs/operators';
-
-const remoteServiceDefinition = {
-  serviceName: 'remoteService',
-  methods: {
-    assets$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
-    },
-  },
-};
-export const MarketServiceDefinition = {
-  serviceName: 'MarketService',
-  methods: {
-    assets$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
-    },
-    asset$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
-    },
-    setAssetsInView: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
-    },
-    getAssetsInView: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_RESPONSE,
-    },
-  },
-};
+import {
+  marketServiceDefinition,
+  remoteServiceDefinition,
+  chartServiceDefinition,
+} from '@scalecubejs-example-trading/api';
 
 createMicroservice({
   seedAddress: 'seed',
@@ -34,7 +13,7 @@ createMicroservice({
   // debug: true,
   services: [
     {
-      definition: MarketServiceDefinition,
+      definition: marketServiceDefinition,
       reference: ({ createProxy }) => {
         const assets = {};
         const remoteService = createProxy({ serviceDefinition: remoteServiceDefinition });
@@ -97,15 +76,6 @@ createMicroservice({
   ],
 });
 
-const chartServiceDefinition = {
-  serviceName: 'chartService',
-  methods: {
-    history$: {
-      asyncModel: ASYNC_MODEL_TYPES.REQUEST_STREAM,
-    },
-  },
-};
-
 createMicroservice({
   // debug: true,
   seedAddress: 'seed',
@@ -115,7 +85,7 @@ createMicroservice({
       definition: chartServiceDefinition,
       reference: ({ createProxy }) => {
         const remoteService = createProxy({ serviceDefinition: remoteServiceDefinition });
-        const marketService = createProxy({ serviceDefinition: MarketServiceDefinition });
+        const marketService = createProxy({ serviceDefinition: marketServiceDefinition });
         const subject = new ReplaySubject(1);
         const assets = {};
         remoteService.assets$().subscribe((asset) => {

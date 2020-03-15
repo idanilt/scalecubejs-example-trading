@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { Asset } from './Asset';
 import React, { useEffect, useRef, useState } from 'react';
-import { marketService } from './marketServiceProxy';
+import { marketService } from '../marketServiceProxy';
 
 import { workers } from '@scalecube/browser';
 

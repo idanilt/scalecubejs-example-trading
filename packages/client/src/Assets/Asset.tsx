@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { marketService } from './marketServiceProxy';
+import { marketService } from '../marketServiceProxy';
 import { TableRow } from '@material-ui/core';
 import TableCell from '@material-ui/core/TableCell';
 
