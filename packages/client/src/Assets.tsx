@@ -17,6 +17,11 @@ const useStyles = makeStyles({
     maxHeight: '400px',
     width: '100%',
   },
+  sticky: {
+    backgroundColor: '#B0CEFF',
+    position: 'sticky',
+    top: 0,
+  },
 });
 
 const addIframe = () => {
@@ -49,11 +54,11 @@ export const Assets = () => {
       <Table stickyHeader aria-label="sticky table">
         <TableHead>
           <TableRow>
-            <TableCell>Id</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Price</TableCell>
-            <TableCell>Last</TableCell>
-            <TableCell>Type</TableCell>
+            <TableCell className={classes.sticky}>Id</TableCell>
+            <TableCell className={classes.sticky}>Name</TableCell>
+            <TableCell className={classes.sticky}>Price</TableCell>
+            <TableCell className={classes.sticky}>Last</TableCell>
+            <TableCell className={classes.sticky}>Type</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
