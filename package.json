@@ -6,11 +6,24 @@
   "author": "idanilt <idan@ilt.co.il>",
   "license": "MIT",
   "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "scripts": {
+    "start": "http-server -a localhost -p 2001"
+  },
   "workspaces": {
     "packages": [
-      "packages*"
+      "packages/*"
     ],
-    "nohoist": [
-    ]
+    "nohoist": []
+  },
+  "devDependencies": {
+    "husky": "^2.3.0",
+    "prettier": "^1.17.1",
+    "pretty-quick": "^1.11.0",
+    "http-server": "^0.11.1"
   }
 }

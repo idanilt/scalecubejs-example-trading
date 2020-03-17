@@ -1,0 +1,22 @@
+{
+  "name": "ww",
+  "version": "1.0.0",
+  "main": "dist",
+  "license": "MIT",
+  "dependencies": {
+    "@scalecube/browser": "0.0.2-alpha.1581923193.4",
+    "@scalecubejs-example-trading/api": "1.0.0",
+    "core-js": "^3.6.4",
+    "parcel-bundler": "^1.12.4"
+  },
+  "scripts": {
+    "build": "parcel build src/index.js --no-minify"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "rxjs": "^6.5.4"
+  },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ]
+}
