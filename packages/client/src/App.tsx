@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import { Assets } from './Assets/Assets';
+import { Header } from './Header/Header';
+import { AssetDialog } from './Assets/AssetDialog';
 
 // @ts-ignore
 const useStyles = makeStyles((theme) => ({
@@ -24,15 +23,11 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
+
   return (
     <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Market
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <Header />
+      <AssetDialog />
       <iframe id="charts" width="100%" height="300px" className={classes.chart}></iframe>
       <Assets />
     </div>

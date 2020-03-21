@@ -1,4 +1,4 @@
-import { from, interval, Observable, Subject } from 'rxjs';
+import { from, interval, Observable, ReplaySubject } from 'rxjs';
 import { ASYNC_MODEL_TYPES, createMicroservice } from '@scalecube/browser';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { remoteServiceDefinition } from '@scalecubejs-example-trading/api';
@@ -11,9 +11,8 @@ interface AssetData {
   type: string;
 }
 
-/*
-const userStatus = new Subject();
-const userBalance = new Subject();
+const userStatus = new ReplaySubject(1);
+const userBalance = new ReplaySubject(1);
 
 const user = () => {
   const name = 'testUser';
@@ -25,37 +24,30 @@ const user = () => {
     isLogged = status;
   });
 
-  userBalance.subscribe((newBalance: number) => {
-    balance = newBalance;
-  });
-
   return {
+    isLogged,
     name,
     balance,
-    isLogged,
   };
 };
-
 let orderId = 1;
 const orders = {};
-const login = () => userStatus.next(true);
-const logout = () => userStatus.next(false);
-
 const u = user();
 
-const balance$ = () =>
-  new Observable((obs) => {
-    userBalance.subscribe((newBalance: number) => {
-      if (u.isLogged) {
-        obs.next(newBalance);
-      }
-    });
-    userStatus.subscribe((status: boolean) => {
-      if (status) {
-        obs.next(u.balance);
-      }
-    });
-  });
+const login = () => {
+  userStatus.next(true);
+  userBalance.next(u.balance + '$');
+  return Promise.resolve(u);
+};
+
+const logout = () => {
+  userStatus.next(false);
+  userBalance.next('0$');
+  return Promise.resolve({});
+};
+
+const balance$ = () => userBalance.asObservable();
+/*
 
 const cancelOrder = ({ oId }) =>
   new Promise((resolve, reject) => {
@@ -151,9 +143,9 @@ createMicroservice({
   services: [
     {
       reference: {
-        // balance$,
-        // login,
-        // logout,
+        balance$,
+        login,
+        logout,
         // placeOrder,
         // cancelOrder,
         assets$,

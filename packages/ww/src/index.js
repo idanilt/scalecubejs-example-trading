@@ -34,6 +34,7 @@ createMicroservice({
 
         const asssetsViewStatus = {};
 
+        const assetDetailId = new ReplaySubject(1);
         return {
           assets$: () => {
             return ready
@@ -70,6 +71,11 @@ createMicroservice({
             const assetsInView = Object.keys(currentAssetsStatus).filter((key) => currentAssetsStatus[key]);
             return Promise.resolve([...assetsInView]);
           },
+          setAssetDetail: (id) => {
+            assetDetailId.next(id);
+            return Promise.resolve();
+          },
+          getAssetDetail$: () => assetDetailId.asObservable(),
         };
       },
     },
@@ -92,22 +98,35 @@ createMicroservice({
           assets[asset.id] = [...(assets[asset.id] || []), asset];
         });
 
-        interval(1000).subscribe(() => {
+        timer(0, 1000).subscribe(() => {
           subject.next({ ...assets });
         });
         return {
-          history$: () =>
+          history$: (logsSize = 10) =>
             new Observable((obs) => {
               subject.subscribe((currentAssets) => {
                 marketService.getAssetsInView().then((assetsInView) => {
                   if (Object.keys(currentAssets).length === 0) {
                     return;
                   }
+
                   const data = [['time [second]', ...assetsInView]];
-                  const chartData = currentAssets[0].map((val, timestampIndex) => [
-                    timeConverter(new Date(val.lastUpdate)),
-                    ...assetsInView.map((id) => currentAssets[id][timestampIndex].price),
-                  ]);
+                  const length = currentAssets[0].length;
+                  let chartData = [];
+
+                  const startIndex = length - logsSize < 0 ? 0 : length - logsSize;
+                  for (let timestampIndex = startIndex; timestampIndex < length; timestampIndex++) {
+                    const val = currentAssets[0][timestampIndex];
+                    chartData.push([
+                      timeConverter(new Date(val.lastUpdate)),
+                      ...assetsInView.map(
+                        (id) =>
+                          currentAssets[id] &&
+                          currentAssets[id][timestampIndex] &&
+                          currentAssets[id][timestampIndex].price
+                      ),
+                    ]);
+                  }
 
                   data.push(...chartData);
                   // console.log('1111111', data)

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { marketService } from '../marketServiceProxy';
+import { marketService } from '../services';
 import { TableRow } from '@material-ui/core';
 import TableCell from '@material-ui/core/TableCell';
 
@@ -30,7 +30,13 @@ export const Asset = (props: any) => {
 
   marketService.setAssetsInView({ id, inView });
   return (
-    <TableRow key={id} ref={ref}>
+    <TableRow
+      key={id}
+      ref={ref}
+      onClick={() => {
+        marketService.setAssetDetail(id);
+      }}
+    >
       <TableCell>{id}</TableCell>
       <TableCell>{name}</TableCell>
       {inView ? (
