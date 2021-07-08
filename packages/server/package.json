@@ -1,0 +1,17 @@
+{
+  "name": "@scalecubejs-example-trading/server",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "@scalecube/browser": "^0.0.1",
+    "rxjs": "^6.5.4",
+    "@scalecubejs-example-trading/api": "1.0.0",
+    "@scalecubejs-example-trading/server": "1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.7.5",
+    "ts-jest": "^24.2.0",
+    "jest": "^24.6.0"
+  }
+}

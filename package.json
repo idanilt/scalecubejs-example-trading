@@ -6,11 +6,20 @@
   "author": "idanilt <idan@ilt.co.il>",
   "license": "MIT",
   "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
   "workspaces": {
     "packages": [
-      "packages*"
+      "packages/*"
     ],
-    "nohoist": [
-    ]
+    "nohoist": []
+  },
+  "devDependencies": {
+    "husky": "^2.3.0",
+    "prettier": "^1.17.1",
+    "pretty-quick": "^1.11.0"
   }
 }
